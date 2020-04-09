@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTA Mapper 3.0 //EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EmpDao">
+    <resultMap id="emp" type="bean.Emp" autoMapping="true">
+        <id column="id" property="id"/>
+        <association property="dept" javaType="bean.Dept">
+            <id column="id" property="id"/>
+            <result column="dept_name" property="deptName"/>
+        </association>
+    </resultMap>
+    <select id="findAll" resultMap="emp">
+        SELECT tb_emp.*,tb_dept.`dept_name` FROM tb_emp LEFT JOIN tb_dept ON tb_emp.`dept_id`=tb_dept.`id` ORDER BY tb_emp.`id`
+    </select>
+
+    <insert id="addEmp" parameterType="bean.Emp">
+        insert into tb_emp(name,sex,age,email,dept_id) values (#{name},#{sex},#{age},#{email},#{dept_id})
+    </insert>
+
+    <select id="findEmpById" parameterType="int" resultMap="emp">
+        select tb_emp.*,tb_dept.* FROM tb_emp LEFT JOIN tb_dept ON tb_emp.`dept_id`=tb_dept.`id` where tb_emp.id=#{id}
+    </select>
+
+    <update id="updateEmp" parameterType="bean.Emp">
+        update tb_emp set name=#{name},sex=#{sex},age=#{age},email=#{email},dept_id=#{dept_id} where id=#{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        delete from tb_emp where id=#{id}
+    </delete>
+</mapper>
